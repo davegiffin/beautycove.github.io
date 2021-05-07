@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Raw List</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-social.css" />
+    <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+    <style>
+        textarea,
+        pre {
+            margin: 0;
+            padding: 0;
+            outline: 0;
+            border: 0;
+        }
+
+        .show-white-space {
+            white-space: pre-wrap;
+        }
+        </style>
+
+    <script>
+
+
+        function a2hex() {
+            var arr = [];
+            var str = $('#content').html();//.toString();//force conversion
+            for (var i = 0, l = str.length; i < l; i++) {
+                var hex = ((str.charCodeAt(i))^10922).toString(16);
+                arr.push(("000"+hex).slice(-4));
+            }
+            $('#encoded').text(arr.join(''));           
+        }
+
+        $(document).ready(function () {
+            $('#content').on('input', (e) => {
+                console.log("hi")
+                a2hex()
+            });
+            a2hex()
+        });
+
+    </script>
+
+</head>
+
+<body>
+
+    <p id="encoded"></p>
+<div id="content" class="show-white-space" contenteditable="true">
+
+<h4>Jack n Dianne</h4>
+
+Capo 2nd Fret
+G///D/G/D/C  x3
+[G] A little [D] ditty bout [C] Jack and [D] Diane
+[G] Two American [D] kids grown up [C] in the [D] heart [G] land
+[G] Jack, he's [D] gonna be a [C] football [D] star
+[G] Diane [D] debutante, back seat of [C] Jac [D] ky's [G] car
+G D C D / G D C D G
+ 
+[G] Suckin' on [D] chili dog outside the [C] Tasty [D] Freeze
+[G] Diane sittin' on [D] Jacky's lap, he got his [C] hands [D] between her [G] knees
+[G] Jacky says [D] "Hey Diane, lets run off be [C] hind a [D] shady [G] tree"
+[G] Dribble off [D] Bobby Brooks, let me [C] do what [D] I [G] please, sayin'
+ 
+[G] Ooh [D] yeah, [C] Life goes [D] on
+[G] Long after the [D] thrill of [C] livin' [D] is [G] gone, sayin'
+[G] Ooh [D] yeah, [C] Life goes [D] on
+[G] Long after the [D] thrill of [C] livin' [D] is [G[ gone, they walk on..
+G    D    G    D    C  x2
+ 
+[G] Jack, he sits [D] back, collects his [C] thoughts for a [D] moment
+[G] Scratches his [D] head and does his [C] best [D] James [G] Dean
+[G] "Well there [D] Diane, we gotta run [C] off to the [D] city"
+[G] Diane says, [D] "Baby you ain't [C] missin' [D] no [G] thing", but Jacky says
+ 
+ [G] Ooh [D] yeah, [C] Life goes [D] on
+[G] Long after the [D] thrill of [C] livin' [D] is [G] gone, sayin'
+[G] Ooh [D] yeah, [C] Life goes [D] on
+[G] Long after the [D] thrill of [C] livin' [D] is [G] gone,
+ 
+[Drum Solo]
+[Bridge]
+N.C.
+Oh, let it rock, let it roll.
+Let the Bible belt come and save my soul
+Holdin' on to sixteen as long as you can
+Change is comin' 'round real soon, make us women and men
+ 
+[Drum Solo][Instrumental] G D C D / G D C D G
+ 
+[G] Ooh [D] yeah, [C] Life goes [D] on
+[G] Long after the [D] thrill of [C] livin' [D] is [G] gone, sayin'
+[G] Ooh [D] yeah, [C] Life goes [D] on
+[G] Long after the [D] thrill of [C] livin' [D] is [G] gone, Rock on
+
+[G] A little [D] ditty bout [C] Jack and [D] Diane
+[G] Two American [D] kids doin' the [C] best [D] they [G] can
+ DGDC x4
+
+<h4>Beside You</h4>
+Tuning: Eb-Ab-Db-Gb-Bb-Eb (1/2-Step Down)
+G  D  G  D  G  D  A
+[G] Here's to your [D] garden [G] here's to your [D] kids
+I [G] heard you were in the [D] neighbourhood
+I've been a [D] long time [G] on the [A] skids
+And [G] baby [D] I'm [G] beside [D] you - you [G] run from the [D] river
+When it [D] long ran [G] over [A] you
+ 
+[G] This is for you [D] standing up to a [G] bone-chilling [D] wind
+[G] This is for the [D] failures you collected from [G] my [A] sin
+And [G] this is for your [D] lonesome [G] tears I never [D] dried
+[G] This is for you [D] hanging in, in the [D] hope that it [G] never [A] dies
+ 
+And [Em] baby [Bm] I'm beside [A] you - you [Em] run from the river
+When it [Bm] long ran over [A] you
+ 
+[G] This is for you [D] waiting up though the call [G] never [D] came
+For the [G] milk of human [D] kindnesses you [D] collected from [G] our [A] dream
+And [G] this is for your [D]  lonesome [G] tears I never [D] dried
+[G] This is for you [D] hanging in, in the [D] hope that it [G] never [A] died
+ 
+And [Em] baby [Bm] I'm beside [A] you - you [Em] run from the river
+When it [Bm] long ran over [A] you
+
+And now [D] I'm running [Bm] here [G] beside [A] you
+And now [D] I'm running [Bm] here [G] beside [A] you
+ 
+[G] This is for the [D] traveler on a [G] blinding desert [D] road
+[G] Good fortune smile [D] upon you and may [D] love be your [G] only [A] load
+And [G] this is for the [D] only one who could [G] quell my burning [D] rage
+To [G] anyone whose been a [D] broken man and any [D] one see [G] better [A] days
+ 
+[D] Baby [Bm] I'm [G] beside [A] you
+And now [D] I'm running [Bm] here [G] beside [A] you
+And now [D] I'm running [Bm] here [G] beside [A] you
+And now [D] I'm running [Bm] here [G] beside [D] you
+
+</div>
+
+
+</body>
+
+</html>
