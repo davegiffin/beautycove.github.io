@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Beauty Cove - Professional makeup and beauty artist</title>
+    <meta name="description" content="Make-up artistry">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-social.css" />
+    <link href="assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link href="assets/lightbox/css/lightbox.css" rel="stylesheet">
+    <!-- https://mdbootstrap.com/docs/jquery/content/icons-list/ -->
+    <!--https://fontawesome.com/v4.7.0/icons/ -->
+
+    <style>
+        body {
+            background-color: #369;
+        }
+
+        .pills {
+            background-color: #FDCDD8;
+            border-radius: 10em;
+            padding: 0px 10px 0px 10px;
+        }
+
+        .prediction {
+            border-color: #ffffff;
+            background-color: aqua;
+            border-radius: 10em;
+            padding: 0px 10px 0px 10px;
+            text-align: center;
+        }
+
+        .predictionOther {
+            border-color: #ffffff;
+            background-color: rgb(197, 218, 233);
+            color: blue;
+            border-radius: 10em;
+            padding: 0px 10px 0px 10px;
+            text-align: center;
+        }
+
+        .predictionOther h1 {
+            font-size: smaller;
+        }
+        .predictionOther h2 {
+            font-size: smaller;
+        }
+
+        .jumbotron {
+            padding: 0px 0px 0px 0px;
+            background-color: #ca8d8c;
+        }
+
+        .icon {
+            position: relative;
+            width: 175px;
+            height: 175px;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 180px;
+            font-size: 56px;
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.0);
+            margin-bottom: 20px;
+            margin-top: 30px;
+            -webkit-transition: all .3s ease-out;
+            transition: all .3s ease-out;
+            border: 1px solid #FDCDD8;
+            color: #FDCDD8;
+        }
+
+        .dark-box {
+            background: #F3F5F8;
+            padding: 20px 0;
+        }
+
+        .dark-box:hover,
+        dark-box:focus {
+            -webkit-box-shadow: 0px 3px 0px 0px #FDCDD8;
+            -moz-box-shadow: 0px 3px 0px 0px #FDCDD8;
+            box-shadow: 0px 3px 0px 0px #FDCDD8;
+        }
+
+        .box-hover {
+            transition: all 500ms ease-in-out;
+            -webkit-transition: all 500ms ease-in-out;
+            -moz-transition: all 500ms ease-in-out;
+            -o-transition: all 500ms ease-in-out;
+        }
+
+        .box-hover:hover,
+        .box-hover:focus {
+            transform: translate(0, -15px);
+            -webkit-transform: translate(0, -15px);
+            -ms-transform: translate(0, -15px);
+        }
+
+        .row {
+            padding-bottom: 2em;
+        }
+
+        h2 {
+            margin-bottom: 0.5em;
+        }
+
+        h4 {
+            margin-top: 0.5em;
+        }
+
+        h5 {
+            margin-top: 1em;
+        }
+
+        h2 span {
+            color: #FDCDD8;
+        }
+
+
+        .speech {
+            border: 1px solid #ddd;
+            width: 300px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .speech input {
+            border: 0;
+            width: 240px;
+            display: inline-block;
+            height: 30px;
+        }
+
+        .speech img {
+            float: right;
+            width: 40px;
+        }
+    </style>
+
+    <script>
+
+
+        $(document).ready(function () {
+
+            startDictation();
+            //document.getElementById('test').innerHTML = finalTranscript;
+
+            //processTranscript("triple 385");
+            //processTranscript("125");
+        });
+
+        /*
+        17 18 19
+        2 double 20 triple 20
+        1 double 55     (1 double 5 five)
+        16 nine 18
+        from 365
+        165
+                */
+
+        // Create an in-memory element to attach dynamically created elements to:
+        function processTranscript(transcript) {
+            let prediction = predictScore(transcript);
+            console.log("prediction:",prediction);
+
+           
+            let div = document.createElement("div");
+
+            let trtitle = document.createElement("h3");
+            trtitle.innerText = transcript;
+            div.append(trtitle);
+
+            for (var i = 0; i < prediction.length && i <3; i++) {
+                let item = document.createElement("div")
+                item.className = "prediction";
+                if (i>0) item.className = "predictionOther";
+                /*
+                    sum: sum,
+                    weight: weight,
+                    score: flat[i]
+                    */
+                item.innerHTML = '<h1>'+prediction[i].sum+'<h1><h2>'+prediction[i].scoreText+'</h2>';
+                div.append(item); // Append to in-memory node, not the DOM
+            }
+
+            // Now inject the completed node just once to the DOM
+            resultDiv = document.getElementById('result');
+            resultDiv.insertBefore(div,resultDiv.firstChild);
+        }
+
+
+// expected output: "oz"
+
+        function predictScore(transcript) {
+            //Given something like 1617 double 20
+            //Create permutations of interpretation. We could have said one, sixty one 7 double 20
+            //Return an array of object []{mult:1, possible: ["1 6 7","16 17"]} etc
+            var ts = transcript.split(/,| |-/);
+            var expanded = [];
+            var n = 0;
+            var mult = 1;
+
+            for (i = 0; i < ts.length; i++) {
+                console.log("score", ts[i]);
+
+                switch (ts[i]) {
+                    case "double":
+                        mult = 2;
+                        break;
+                    case "triple":
+                    case "treble":
+                    case "trebble":
+                        mult = 3;
+                        break;
+                    default:
+                        if (!isInt(ts[i])) {
+                            console.log("Warn ts[", i, "] !int: ", ts[i]);
+                            break;
+                        }
+                        var nInt = Number(ts[i]);
+
+                        expanded.push ( { raw: ts[i], mult: mult, possible: expandNumbers("", ts[i]) } );
+                        n++;
+                        mult = 1;
+                }
+            }
+
+            console.log("expanded:",expanded);
+            //Flatten / convulve the permutations into an array of arrays
+            var flat = flattenPermute(expanded,0);
+            console.log("flat:",flat);
+            var weighted = [];
+            //Create objects with metrics of each possibility
+            for(i = 0;i<flat.length;i++) {
+                let o  = flat[i];
+                var weight = 0;
+                if (o.length>3)
+                    continue;
+
+                if (o.length<3)
+                    weight += 5;
+                if (o.length<2)
+                    weight += 5;
+
+                console.log("Weight",flat[i],"len:",o.length,"=",weight);
+                var sum = 0;
+                let scoreText="";
+                for(sumiter=0;sumiter<o.length;sumiter++) {
+                    sum+=o[sumiter].v * o[sumiter].m;
+                    if (o[sumiter].m==2) scoreText=scoreText+'D';
+                    if (o[sumiter].m==3) scoreText=scoreText+'T';
+                    scoreText+=o[sumiter].v;
+                    scoreText+='&nbsp;&nbsp;'
+                }
+
+                console.log("scoreText",scoreText,"sum",sum);
+                weighted.push( {
+                    sum: sum,
+                    weight: weight,
+                    score: o,
+                    scoreText: scoreText
+                })
+
+            }
+            weighted.sort((a,b)=>{
+                return a.weight-b.weight;
+            });
+
+            return weighted;
+        }
+
+
+    function expandNumbers(prefix, number) {
+        //Take a number and turn it into an array of possibilities
+
+				//We don't want to handle any recursion with leading 0
+				if (number[0]=='0') return [];
+        
+        //prepare prefix for concat
+        //console.log("expand:",prefix,number)
+            
+        if (prefix.length>0) prefix=prefix+' ';
+
+        var arr = [];
+        if (number.length == 0) {
+            return arr;
+        }
+
+        if (number.length == 1) {
+            arr.push(prefix+number);
+            return arr;
+        }
+
+        if (number.length == 2) {
+            arr.push(prefix+number);
+            
+            //10 20 30 etc. No point in adding 1 and 0. 0 won't exist as a single number, so we know it's just 10 and not 1+0
+            if (number[1] == '0') {
+                return arr;
+            }
+
+            arr.push(prefix+number[0] + ' ' + number[1]);
+            return arr;
+        }
+
+        arr=arr.concat(expandNumbers(prefix+number[0], number.substring(1) ));
+        arr=arr.concat(expandNumbers(prefix+number.substring(0,2), number.substring(2) ));
+        //arr.concat(expandNumbers(number.substring(0,1), number.substring(2) ));
+        //arr.concat(expandNumbers(number.substring(0,1), number.substring(2) ));
+        return arr;
+    }
+
+
+
+    function flattenPermute(pred, ix) {
+ /*
+Flatten an array of predictions
+ [{
+  mult: 1,
+  possible: ["1 7 16", "1 7 1 6", "1 71 6", "17 16", "17 1 6"],
+  raw: "1716"
+}, {
+  mult: 2,
+  possible: ["20"],
+  raw: "20"
+}]
+
+into
+[[1, 7, 16, 40], [1, 7, 1, 6, 40], [1, 71, 6, 40], [17, 16, 40], [17, 1, 6, 40]]
+Eliminate impossible multipliers
+*/      
+//console.log("depth",ix,pred[ix]);
+
+            var flat = [];
+            
+            var posslist = pred[ix].possible;
+            for (var i = 0; i<posslist.length;i++) {
+                var possible = posslist[i].split(' ');
+                console.log("flat possible:",possible);
+                //Now we have an array of a possibe set.
+                //Apply the multiplier
+                var mult = pred[ix.mult];
+
+                //Apply some known dart possibilities regarding the multipliers
+                //double max = 40 (unless double 25)
+                if (mult==2 && (possible[0]>20 && possible[0]!=25)) {
+                    continue;
+                }
+                if (mult==3 && possible[0]>20) {
+                    continue;
+                }
+
+                //Account for 1 19 vs 1 1 9 ?
+                // 1 18 vs 1 1 8  (1 double 9 - miss)
+
+                possible[0]={ v:possible[0]*1,m:pred[ix].mult};
+                for(var intify=1;intify<possible.length;intify++) {
+                	possible[intify]={ v:possible[intify]*1, m:1 };
+                }
+//console.log(possible, ix, pred.length);
+                //If we are last
+                if ((ix+1)==pred.length) {
+                    //flat is an array containing one array [[1,4,5]]
+                    flat.push(possible);
+                    continue;
+                }
+                //Now get upstream [[]]
+                var upstream = flattenPermute(pred,ix+1);
+                for (var up = 0;up<upstream.length;up++) {
+                    //Build a consolidated array for each of this possible * upstream
+                    var oneresult = [];
+                    oneresult = oneresult.concat(possible);
+                    var ups=upstream[up];
+//                    console.log("got upstram:",ups," this possible:",possible);
+                    oneresult = oneresult.concat(upstream[up]);
+                    flat.push(oneresult);
+                }
+            }
+          console.log("returning",flat);
+          return flat;
+        }
+
+
+        function isInt(value) {
+            return !isNaN(value) &&
+                parseInt(Number(value)) == value &&
+                !isNaN(parseInt(value, 10));
+        }
+
+        function ExtractTranscript(phrases, results) {
+  // Loop through the alternatives to check if any of our hot phrases are contained in them.
+  for (let result in results[0]) {
+    if (new RegExp(phrases.join("|")).test(results[0][result].transcript)) {
+      return results[0][result].transcript; // Return them if they are
+    }
+  }
+  return results[0][0].transcript; // Otherwise return the highest confidence
+}
+
+        function startDictation() {
+            var grammar = '#JSGF V1.0; grammar numbers; public <number> = one | two | three | four | five | six | seven | eight | nine | ten | eleven | twelve | thirteen | fourteen | fifteen | sixteen | seventeen | eighteen | ninteen | twenty | thirty | fourty | fifty | sixty | seventy | eighty | ninety | hundred | and | double | triple | treble | score;'
+            var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+            window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+            var recognition = new window.SpeechRecognition();
+
+            var speechRecognitionList = new SpeechGrammarList();
+            speechRecognitionList.addFromString(grammar, 1);
+            recognition.grammars = speechRecognitionList;
+
+            //if (window.hasOwnProperty('webkitSpeechRecognition')) {
+            //var recognition = new webkitSpeechRecognition();
+
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 10;
+
+            recognition.lang = 'en-AU';
+            recognition.start();
+
+            recognition.onresult = function (e) {
+                for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+                    let transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        console.log('final:', transcript, event.results);
+                        //processTranscript(transcript);
+                    } else {
+                        console.log('non-final:', transcript);
+                    }
+                }
+                
+            };
+
+            recognition.onerror = function (e) {
+                console.log("recognition error");
+                recognition.stop();
+            };
+
+            recognition.onend = function (e) {
+                console.log("recognition end",e);
+                recognition.start();
+            };
+
+            recognition.onspeechend = function (e) {
+                console.log("onspeechend");
+                recognition.stop();
+            };
+
+            //}
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <div id="fb-root"></div>
+    <div class="container text-center" style="margin-top:30px">
+
+
+        <div id="test">
+            Scor
+        </div>
+
+        <img src="img/bars.svg">
+
+        <div id="result">
+        </div>
+
+    </body>
+
+</html>
